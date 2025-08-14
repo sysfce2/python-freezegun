@@ -139,3 +139,21 @@ def test_auto_and_manual_tick(
         incremented_time = datetime.datetime.now()
         expected_time += datetime.timedelta(seconds=expected_diff)
         assert incremented_time == expected_time
+
+
+def test_as_arg():
+    @freeze_time("2012-01-14", as_arg=True)
+    def as_arg(frozen, arg):
+        assert frozen.time_to_freeze == datetime.datetime(2012, 1, 14, 0, 0)
+        assert arg == 1
+    as_arg(1)
+
+
+def test_as_kwarg():
+    @freeze_time("2012-01-14", as_kwarg="frozen")
+    def as_arg(frozen=None, *, kwarg):
+        assert frozen.time_to_freeze == datetime.datetime(2012, 1, 14, 0, 0)
+        assert kwarg == 1
+
+    as_arg(kwarg=1)
+
