@@ -1,7 +1,9 @@
 import datetime
 import fractions
 import pytest
+import typing
 from freezegun import freeze_time
+from freezegun.api import StepTickTimeFactory, TickingDateTimeFactory, FrozenDateTimeFactory
 from dateutil.relativedelta import relativedelta
 from datetime import timedelta, tzinfo
 from tests import utils
@@ -141,19 +143,24 @@ def test_auto_and_manual_tick(
         assert incremented_time == expected_time
 
 
-def test_as_arg():
+def test_as_arg()->None:
     @freeze_time("2012-01-14", as_arg=True)
-    def as_arg(frozen, arg):
+    def as_arg(frozen: typing.Optional[TickingDateTimeFactory]=None,
+               arg: typing.Optional[int]=None
+    ) -> None :
+        assert frozen
         assert frozen.time_to_freeze == datetime.datetime(2012, 1, 14, 0, 0)
         assert arg == 1
-    as_arg(1)
+
+    as_arg(arg=1)
 
 
-def test_as_kwarg():
+def test_as_kwarg()->None:
     @freeze_time("2012-01-14", as_kwarg="frozen")
-    def as_arg(frozen=None, *, kwarg):
+    def as_arg(arg: int, frozen: typing.Optional[TickingDateTimeFactory]=None) -> None:
+        assert frozen
         assert frozen.time_to_freeze == datetime.datetime(2012, 1, 14, 0, 0)
-        assert kwarg == 1
+        assert arg == 1
 
-    as_arg(kwarg=1)
+    as_arg(arg=1)
 
