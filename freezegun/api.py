@@ -927,7 +927,7 @@ class _freeze_time:
             assert False, "You can't specify both as_arg and as_kwarg at the same time. Pick one."
         if self.as_arg:
             result = func(time_factory, *args, **kwargs)  # type: ignore
-        if self.as_kwarg:
+        elif self.as_kwarg:
             kwargs[self.as_kwarg] = time_factory
             result = func(*args, **kwargs)
         else:
